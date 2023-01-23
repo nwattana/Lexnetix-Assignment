@@ -34,9 +34,9 @@ class TclassesBase(Schema):
     title:str
     descript:str
 
-
-
-##  For List
+##########################
+##     for Listed       ##
+##########################
 class SchoolSchemaListed(ModelSchema):
     class Config:
         model = schools
@@ -123,7 +123,9 @@ class TclassesListed(Schema):
     def resolve_school(obj):
         return obj.school.name
     
-## For Post
+##########################
+##     for Post         ##
+##########################
 class HeadMasterPost(Schema):
     name: str
     email:str = None
@@ -142,15 +144,16 @@ class StudentPost(Schema):
     school_id : int = None
     teacher_id: int = None
     
-
-    
 class TclassesPost(Schema):
     title:str
     descript:str
     school_id : int
-    teacher_id: int 
+    teacher_id: int
+    student_list: list
     
-## For Patch
+##########################
+##     for Patch        ##
+##########################
 class SchoolPatch(Schema):
     name : str = None
     email : str = None
@@ -168,6 +171,12 @@ class TeacherPatch(Schema):
     email:str = None
     tel:str = None
     school_id:int = None
+
+class TclassesPatch(Schema):
+    title:str = None
+    description:str = None
+    school_id : int = None
+    teacher_id: int = None
 
 class EnrollForm(Schema):
     class_id_list:list

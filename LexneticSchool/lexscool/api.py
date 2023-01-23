@@ -129,7 +129,7 @@ def teacher_create(request:HttpRequest, payload:TeacherPost):
     return new_teacher
 
 @api.get('/teacher/{teacher_id}', response={200:TeacherListed})
-def teacher_create(request:HttpRequest, teacher_id:int):
+def teacher_get_by_id(request:HttpRequest, teacher_id:int):
     teacher = get_object_or_404(teachers, pk=teacher_id)
     return teacher
 
@@ -187,10 +187,52 @@ def student_create(request:HttpRequest, payload:StudentPost):
     new_student.save()
     return 201, new_student
 
-@api.get('/student/{student_ud}', response={200:StudentListed})
+@api.get('/student/{student_id}', response={200:StudentListed})
 def student_get_by_id(request:HttpRequest, student_id:int):
     get_student = get_object_or_404(students, pk=student_id)
     return get_student
+
+@api.put('/student/{student_id}', response={200:StudentListed, 406:ErrorSchema})
+def student_update_by_id(request:HttpRequest, payload:StudentPost, student_id:int):
+    get_student = get_object_or_404(students, pk=student_id)
+    school_obj = get_object_or_404(schools, pk=payload.school_id)
+    teacher_obj = get_object_or_404(teachers, pk=payload.teacher_id)
+    if payload.year in ['1', '2', '3', '4', '5']:
+        get_student.year = payload.year
+    else:
+        return 406, {'message', 'Wrong or Empty Year'}
+    if teacher_obj.school.id != school_obj.id:
+        return 406, {'message', 'Teacher Not in school'}
+    get_student.school = school_obj
+    get_student.teacher = teacher_obj
+    get_student.name = payload.name
+    get_student.save()
+    return  get_student
+    
+@api.patch('/student/{student_id}', response={200:StudentListed, 406:ErrorSchema})
+def student_patch_by_id(request:HttpRequest, payload:StudentPost, student_id:int):
+    get_student = get_object_or_404(students, pk=student_id)
+    if payload.school_id:
+        school_obj = get_object_or_404(schools, pk=payload.school_id)
+    if payload.teacher_id:
+        teacher_obj = get_object_or_404(teachers, pk=payload.teacher_id)  
+    if payload.year in ['1', '2', '3', '4', '5']:
+        get_student.year = payload.year
+    else:
+        return 406, {'message', 'Wrong or Empty Year'}
+    if teacher_obj.school.id != school_obj.id:
+        return 406, {'message', 'Teacher Not in school'}
+    get_student.school = school_obj
+    get_student.teacher = teacher_obj
+    get_student.name = payload.name
+    get_student.save()
+    return get_student
+
+@api.delete('/student/{student_id}', response={204:None})
+def student_delete_by_id(request:HttpRequest, student_id:int):
+    get_student = get_object_or_404(students, pk=student_id)
+    get_student.delete()
+    return 204
 
 #####################
 ##       class     ##
@@ -218,8 +260,36 @@ def tclasses_create(request:HttpRequest, payload:TclassesPost):
 ## so it no need to put school right ? just get school from teacher
 @api.get('/tclasses/{class_id}', response={200:TclassesListed})
 def tclasses_get_by_id(request:HttpRequest, class_id:int):
-    to_get = get_object_or_404(tclasses, pk=class_id)
-    return to_get
+    tclass = get_object_or_404(tclasses, pk=class_id)
+    return tclass
+
+@api.put('/tclasses/{class_id}', response={200:TclassesListed})
+def tclasses_put_by_id(request:HttpRequest, payload:TclassesPatch, class_id:int):
+    class_obj = get_object_or_404(tclasses, pk=class_id)
+    school_obj = get_object_or_404(schools, pk=payload.school_id)
+    teacher_obj = get_object_or_404(teachers, pk=payload.teacher_id)
+    class_obj.title = payload.title
+    class_obj.description = payload.description
+    if school_obj.id == teacher_obj.school.id:
+        class_obj.school = school_obj
+        class_obj.teacher = teacher_obj
+    else:
+        return 409, {'message', 'Teacher Not in school'}
+    class_obj.save()
+    return 200, TclassesListed
+
+@api.patch('/tclasses/{class_id}', response={200:TclassesListed})
+def tclasses_patch_by_id(request:HttpRequest, payload:TclassesPatch, class_id:int):
+    to_patch = get_object_or_404(tclasses, pk=class_id)
+    for attr, value in payload.dict(exclude_unset=True).items():
+        setattr(to_patch, attr, value)
+    return 200, to_patch
+
+@api.delete('/tclasses/{class_id}', response={204:None})
+def tclasses_delete_by_id(request:HttpRequest, class_id:int):
+    to_delete = get_object_or_404(tclasses, pk=class_id)
+    return 204, None
+       
 
 ##########################
 ##       EnrollForm     ##

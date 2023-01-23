@@ -39,7 +39,7 @@ class students(models.Model):
 
 class tclasses(models.Model):
     title = models.CharField(max_length=100)
-    descript = models.CharField(max_length=100, null=True)
+    description = models.CharField(max_length=100, null=True)
     student = models.ManyToManyField(students)
     teacher = models.ForeignKey(teachers, on_delete=models.CASCADE, null=True)
     school = models.ForeignKey(schools, on_delete=models.CASCADE, null=True)
