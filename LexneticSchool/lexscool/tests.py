@@ -24,9 +24,8 @@ SCHOOL_IN_3 = SchoolBase(
     tel = "school 3",
 )
 
-class BasicGet(unittest.TestCase):
+class BasicGetPost(unittest.TestCase):
     def setUp(self):
-        self.client = Client()
         school1 = school_create(None, SCHOOL_IN_1)
         school2 = school_create(None, SCHOOL_IN_2)
         school3 = school_create(None, SCHOOL_IN_3)
@@ -46,8 +45,19 @@ class BasicGet(unittest.TestCase):
         response = school_get_by_id(None, school_id = 3)
         self.assertEqual(result, response)
         
+class BasicPostSchool(unittest.TestCase):
+    def setUp(self):
+        school1 = school_create(None, SCHOOL_IN_1)
+        school2 = school_create(None, SCHOOL_IN_2)
         
-
+    def test_no_duplicate_School(self):
+        before = len(schools.objects.all())
+        response = school_create(None, SCHOOL_IN_2)
+        after = len(schools.objects.all())
+        self.assertEqual(after, before)
+        self.assertEqual(response, (200, schools.objects.get(pk=2)))
+    
+        
 class SimpleTest(unittest.TestCase):
     def setUp(self):
         self.client = Client()

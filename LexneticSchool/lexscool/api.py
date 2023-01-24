@@ -13,10 +13,11 @@ def school_get_all(request:HttpRequest):
     all_school = schools.objects.all()
     return all_school
 
-@api.post('/school', response={201:SchoolSchemaListed})
+@api.post('/school', response={200:SchoolSchemaListed ,201:SchoolSchemaListed})
 def school_create(request:HttpRequest, payload:SchoolBase):
     try:
         new_school = schools.objects.get(name=payload.name)
+        return 200, new_school
     except:
         new_school = schools.objects.create(**payload.dict())
     return 201, new_school
