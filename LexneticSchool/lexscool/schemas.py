@@ -32,7 +32,7 @@ class StudentBase(Schema):
 
 class TclassesBase(Schema):
     title:str
-    descript:str
+    descript:str = None
 
 ##########################
 ##     for Listed       ##
@@ -146,9 +146,10 @@ class StudentPost(Schema):
     
 class TclassesPost(Schema):
     title:str
-    description:str = None
+    description:str
     school_id : int
     teacher_id: int
+    student_list: list = None
     
 ##########################
 ##     for Patch        ##

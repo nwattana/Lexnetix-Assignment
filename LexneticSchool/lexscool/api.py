@@ -306,7 +306,7 @@ def tclasses_get_all(request:HttpRequest):
     all_class = tclasses.objects.all()
     return all_class
 
-@api.post('/tclasses', response={201:TclassesListed,406:ErrorSchema})
+@api.post('/tclasses', response={201:TclassesListed,404:ErrorSchema,406:ErrorSchema})
 def tclasses_create(request:HttpRequest, payload:TclassesPost = Form(...)):
     
     try:
@@ -322,6 +322,13 @@ def tclasses_create(request:HttpRequest, payload:TclassesPost = Form(...)):
         school = get_school,
         teacher = get_teacher
     )
+    new_class.save()
+    for tstd in payload.student_list:
+        try:
+            student = get_object_or_404(students, pk=tstd)
+        except:
+            return 404, {'message':'Not Found'}
+        new_class.student.add(student)
     new_class.save()
     return 201, new_class
 
@@ -376,7 +383,7 @@ def tclasses_delete_by_id(request:HttpRequest, class_id:int):
 ##       EnrollForm     ##
 ##########################
 
-@api.patch('/Enroll',response={202:ErrorSchema, 406:ErrorSchema})
+@api.patch('/Enroll',response={202:ErrorSchema,404:ErrorSchema, 406:ErrorSchema})
 def enrolled_student(request:HttpRequest, payload:EnrollForm):
     for tclass in payload.class_id_list:
         try:
