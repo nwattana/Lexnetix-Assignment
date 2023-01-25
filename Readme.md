@@ -7,19 +7,24 @@ Acronym:
 ` OTO: one to one`  
 ` MTO: many to one`  
 ` MTM: many to many`   
-
-## Creat Order 
-**School**  
-    ` Standalone Model` 
-**HeadMater**  
-    ` OTO -> School` 
-**Teacher**  
-    ` OTO -> School` 
+ 
+## Creat Order   
+**School**   
+    ` Standalone Model`   
+**HeadMater**   
+    ` OTO -> School`   
+**Teacher**   
+    ` OTO -> School`  
 **Student**  
-    ` OTO -> School`
-    ` OTM -> teacher`
+    ` OTO -> School`  
+    ` OTM -> teacher`  
 
-**Class**
-    `MTO -> Teacher`
-    `MTO -> School`
-    `MTM -> Student`
+**Class**  
+    `MTO -> Teacher`  
+    `MTO -> School`  
+    `MTM -> Student`  
+
+## Unit Test
+```shell
+python3 manage.py test
+```

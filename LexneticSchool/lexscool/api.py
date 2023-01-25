@@ -295,7 +295,7 @@ def tclasses_delete_by_id(request:HttpRequest, class_id:int):
 ##       EnrollForm     ##
 ##########################
 
-@api.patch('/tclasses',response={202:ErrorSchema, 406:ErrorSchema})
+@api.patch('/Enroll',response={202:ErrorSchema, 406:ErrorSchema})
 def enrolled_student(request:HttpRequest, payload:EnrollForm):
     for tclass in payload.class_id_list:
         tclass_obj = get_object_or_404(tclasses, pk=tclass)
