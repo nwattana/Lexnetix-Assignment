@@ -146,10 +146,9 @@ class StudentPost(Schema):
     
 class TclassesPost(Schema):
     title:str
-    description:str
+    description:str = None
     school_id : int
     teacher_id: int
-    student_list: list
     
 ##########################
 ##     for Patch        ##
