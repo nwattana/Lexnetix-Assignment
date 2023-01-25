@@ -506,25 +506,25 @@ class PutPatchTeacher(TestCase):
         self.assertEquals(data[0], {'message': 'Not Found'})
 
     def test_patch_teacher_basic(self):
-        response = teacher_patch_by_id(None, TEACHER_IN_2, 1)
+        response = teacher_patch_by_id(None, 1, TEACHER_IN_2)
         status, *data = response
         self.assertEqual(status, 200)
         self.assertEqual(data[0].school.name, 'school 2')
         self.assertEqual(data[0].name, 'T2')
-        response = teacher_patch_by_id(None, TEACHER_IN_PATCH, 1)
+        response = teacher_patch_by_id(None, 1, TEACHER_IN_PATCH)
         status, *data = response
         self.assertEqual(status, 200)
         self.assertEqual(data[0].name, 'PATCH')
         self.assertEqual(data[0].email, 'PATCH')
 
     def test_patch_teacher_no_teacher(self):
-        response = teacher_patch_by_id(None, TEACHER_IN_2, 999)
+        response = teacher_patch_by_id(None, 999, TEACHER_IN_2)
         status, *data = response
         self.assertEquals(status, 404)
         self.assertEquals(data[0], {'message': 'Not Found'})
 
     def test_patch_teacher_no_school(self):
-        response = teacher_patch_by_id(None, TEACHER_IN_999, 1)
+        response = teacher_patch_by_id(None, 1, TEACHER_IN_999)
         status, *data = response
         self.assertEquals(status, 404)
         self.assertEquals(data[0], {'message': 'Not Found'})
@@ -612,39 +612,39 @@ class PutStudent(TestCase):
         student_create(None, STUDENT_IN2)
 
     def test_put_student_basic(self):
-        response = student_put_by_id(None, STUDENT_PUT, 1)
+        response = student_put_by_id(None, 1, STUDENT_PUT)
         status, *data = response
         self.assertEquals(status, 200)
         self.assertEquals(data[0].name, "std 999")
         self.assertEquals(data[0].year, "2")
 
     def test_put_student_no_student(self):
-        response = student_put_by_id(None, STUDENT_PUT, 999)
+        response = student_put_by_id(None, 999, STUDENT_PUT)
         status, *data = response
         self.assertEquals(status, 404)
         self.assertEquals(data[0], {'message': 'Not Found'})
 
     def test_put_student_no_school(self):
-        response = student_put_by_id(None, STUDENT_SCHOOL999, 1)
+        response = student_put_by_id(None, 1, STUDENT_SCHOOL999)
         status, *data = response
         self.assertEquals(status, 404)
         self.assertEquals(data[0], {'message': 'Not Found'})
 
     def test_put_student_no_teacher(self):
-        response = student_put_by_id(None, STUDENT_TEACHER999, 1)
+        response = student_put_by_id(None, 1, STUDENT_TEACHER999)
         status, *data = response
         self.assertEquals(status, 404)
         self.assertEquals(data[0], {'message': 'Not Found'})
 
     def test_patch_student_basic(self):
-        response = student_patch_by_id(None, STUDENT_PUT, 1)
+        response = student_patch_by_id(None, 1, STUDENT_PUT)
         status, *data = response
         self.assertEquals(status, 200)
         self.assertEquals(data[0].name, "std 999")
         self.assertEquals(data[0].year, "2")
 
     def test_patch_student_no_choice(self):
-        response = student_patch_by_id(None, STUDENT_PATCH_NO_CHOICE, 1)
+        response = student_patch_by_id(None, 1, STUDENT_PATCH_NO_CHOICE)
         status, *data = response
         self.assertEquals(status, 406)
         self.assertEquals(data[0], {'message', 'Bad input'})
@@ -746,7 +746,7 @@ class PutPatchClass(TestCase):
         tclasses_create(None, TCLASSES_IN1)
 
     def test_put_class_basic(self):
-        response = tclasses_put_by_id(None, TCLASSES_IN2, 1)
+        response = tclasses_put_by_id(None, 1, TCLASSES_IN2)
         status, *data = response
         self.assertEquals(status, 200)
         self.assertEquals(data[0].title, "class2")
@@ -755,32 +755,32 @@ class PutPatchClass(TestCase):
         self.assertEquals(data[0].teacher.id, 2)
 
     def test_put_class_no_class(self):
-        response = tclasses_put_by_id(None, TCLASSES_IN2, 999)
+        response = tclasses_put_by_id(None, 999, TCLASSES_IN2)
         status, *data = response
         self.assertEquals(status, 404)
         self.assertEqual(data[0], {'Message': 'Not Found'})
 
     def test_put_class_no_school(self):
-        response = tclasses_put_by_id(None, TCLASSES_NO_SCHOOL, 1)
+        response = tclasses_put_by_id(None, 1, TCLASSES_NO_SCHOOL)
         status, *data = response
         self.assertEquals(status, 404)
         self.assertEqual(data[0], {'Message': 'Not Found'})
 
     def test_put_class_no_techer(self):
-        response = tclasses_put_by_id(None, TCLASSES_NO_TEACHER, 1)
+        response = tclasses_put_by_id(None, 1, TCLASSES_NO_TEACHER)
         status, *data = response
         self.assertEquals(status, 404)
         self.assertEquals(data[0], {'Message': 'Not Found'})
 
     def test_put_class_no_teacher_in_school(self):
-        response = tclasses_put_by_id(None, TCLASSES_NO_TEACHERSCHOOL, 1)
+        response = tclasses_put_by_id(None, 1, TCLASSES_NO_TEACHERSCHOOL)
         status, *data = response
         self.assertEquals(status, 406)
         self.assertEquals(data[0], {'Message', 'Bad Input'})
 
     # patch
     def test_patch_class_basic(self):
-        response = tclasses_patch_by_id(None, TCLASSES_INPATCH, 1)
+        response = tclasses_patch_by_id(None, 1, TCLASSES_INPATCH)
         status, *data = response
         self.assertEquals(status, 200)
         self.assertEquals(data[0].title, "PATCH")
@@ -789,7 +789,7 @@ class PutPatchClass(TestCase):
         self.assertEquals(data[0].teacher.id, 1)
 
     def test_patch_class_no_class(self):
-        response = tclasses_patch_by_id(None, TCLASSES_IN2, 999)
+        response = tclasses_patch_by_id(None, 999, TCLASSES_IN2)
         status, *data = response
         self.assertEquals(status, 404)
         self.assertEqual(data[0], {'Message': 'Not Found'})

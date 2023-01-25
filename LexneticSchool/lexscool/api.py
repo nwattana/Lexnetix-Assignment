@@ -14,7 +14,7 @@ def school_get_all(request:HttpRequest):
     return 200,all_school
 
 @api.post('/school', response={200:SchoolSchemaListed ,201:SchoolSchemaListed})
-def school_create(request:HttpRequest, payload:SchoolBase):
+def school_create(request:HttpRequest, payload:SchoolBase = Form(...)):
     try:
         new_school = schools.objects.get(name=payload.name)
         return 200, new_school
@@ -31,7 +31,7 @@ def school_get_by_id(request:HttpRequest, school_id:int):
     return 200, school
 
 @api.put('/school/{school_id}', response={200:SchoolSchemaListed, 404:ErrorSchema})
-def school_update_by_id(request:HttpRequest, school_id:int, payload:SchoolBase):
+def school_update_by_id(request:HttpRequest, school_id:int, payload:SchoolBase = Form(...)):
     try:
          school_to_update = get_object_or_404(schools, pk=school_id)
     except:
@@ -44,7 +44,7 @@ def school_update_by_id(request:HttpRequest, school_id:int, payload:SchoolBase):
     return 200, school_to_update
 
 @api.patch('/school/{school_id}', response={200:SchoolSchemaListed, 404:ErrorSchema})
-def school_patch_by_id(request:HttpRequest, school_id:int, payload:SchoolPatch):
+def school_patch_by_id(request:HttpRequest, school_id:int, payload:SchoolPatch = Form(...)):
     try:
         school_to_patch = get_object_or_404(schools, pk=school_id)
     except:
@@ -73,7 +73,7 @@ def headmaster_get_all(request:HttpRequest):
     return all_headmaster
 
 @api.post('/headmaster', response={201:HeadMasterListed, 409:ErrorSchema})
-def headmaster_create(request:HttpRequest, payload:HeadMasterPost):
+def headmaster_create(request:HttpRequest, payload:HeadMasterPost = Form(...)):
     try:
         add_school = schools.objects.get(pk=payload.school_id)
     except:
@@ -99,7 +99,7 @@ def headmaster_get_by_id(request:HttpRequest, headmaster_id:int):
     return 200, headmaster
 
 @api.put('/headmaster/{headmaster_id}', response={200:HeadMasterListed, 404:ErrorSchema})
-def headmaster_put_by_id(request:HttpRequest, headmaster_id:int, payload:HeadMasterPost):
+def headmaster_put_by_id(request:HttpRequest, headmaster_id:int, payload:HeadMasterPost = Form(...)):
     try:
         to_put = get_object_or_404(headmasters, pk=headmaster_id)
     except:
@@ -111,7 +111,7 @@ def headmaster_put_by_id(request:HttpRequest, headmaster_id:int, payload:HeadMas
     return 200, to_put
 
 @api.patch('/headmaster/{headmaster_id}', response={200:HeadMasterListed, 404:ErrorSchema})
-def headmaster_patch_by_id(request:HttpRequest, headmaster_id:int, payload:HeadMasterPatch):
+def headmaster_patch_by_id(request:HttpRequest, headmaster_id:int, payload:HeadMasterPatch = Form(...)):
     try:
         to_patch = get_object_or_404(headmasters, pk=headmaster_id)
     except:
@@ -140,7 +140,7 @@ def teacher_get_all(request:HttpRequest):
     return all_teacher
 
 @api.post('/teacher', response={201:TeacherListed, 404:ErrorSchema})
-def teacher_create(request:HttpRequest, payload:TeacherPost):
+def teacher_create(request:HttpRequest, payload:TeacherPost = Form(...)):
     try:
         setschool = get_object_or_404(schools, pk=payload.school_id)
     except:
@@ -185,10 +185,7 @@ def teacher_put_by_id(
 @api.patch(
     '/teacher/{teacher_id}', 
     response={200:TeacherListed, 404:ErrorSchema})
-def teacher_patch_by_id(
-    request:HttpRequest, 
-    payload:TeacherPatch, 
-    teacher_id:int):
+def teacher_patch_by_id(request:HttpRequest, teacher_id:int, payload:TeacherPatch  = Form(...)):
     try:
         to_patch_obj = get_object_or_404(teachers, pk = teacher_id)
         if payload.school_id:
@@ -223,7 +220,7 @@ def student_get_all(request:HttpRequest):
     return all_student
 
 @api.post('/student', response={201:StudentListed, 404:ErrorSchema,406:ErrorSchema})
-def student_create(request:HttpRequest, payload:StudentPost):
+def student_create(request:HttpRequest, payload:StudentPost = Form(...)):
     try:
         get_school = get_object_or_404(schools, pk = payload.school_id)
         get_teacher = get_object_or_404(teachers, pk = payload.teacher_id)
@@ -251,7 +248,7 @@ def student_get_by_id(request:HttpRequest, student_id:int):
     return 200, get_student
 
 @api.put('/student/{student_id}', response={200:StudentListed, 406:ErrorSchema})
-def student_put_by_id(request:HttpRequest, payload:StudentPost, student_id:int):
+def student_put_by_id(request:HttpRequest, student_id:int, payload:StudentPost = Form(...)):
     try:
         get_student = get_object_or_404(students, pk=student_id)
         school_obj = get_object_or_404(schools, pk=payload.school_id)
@@ -271,7 +268,7 @@ def student_put_by_id(request:HttpRequest, payload:StudentPost, student_id:int):
     return  200, get_student
     
 @api.patch('/student/{student_id}', response={200:StudentListed, 406:ErrorSchema})
-def student_patch_by_id(request:HttpRequest, payload:StudentPost, student_id:int):
+def student_patch_by_id(request:HttpRequest, student_id:int, payload:StudentPost = Form(...)):
     try:
         get_student = get_object_or_404(students, pk=student_id)
         if payload.school_id:
@@ -310,7 +307,7 @@ def tclasses_get_all(request:HttpRequest):
     return all_class
 
 @api.post('/tclasses', response={201:TclassesListed,406:ErrorSchema})
-def tclasses_create(request:HttpRequest, payload:TclassesPost):
+def tclasses_create(request:HttpRequest, payload:TclassesPost = Form(...)):
     
     try:
         get_school = get_object_or_404(schools, pk=payload.school_id)
@@ -338,7 +335,7 @@ def tclasses_get_by_id(request:HttpRequest, class_id:int):
     return 200,tclass
 
 @api.put('/tclasses/{class_id}', response={200:TclassesListed, 404:ErrorSchema, 406:ErrorSchema})
-def tclasses_put_by_id(request:HttpRequest, payload:TclassesPatch, class_id:int):
+def tclasses_put_by_id(request:HttpRequest, class_id:int, payload:TclassesPatch = Form(...)):
     try:
         class_obj = get_object_or_404(tclasses, pk=class_id)
         school_obj = get_object_or_404(schools, pk=payload.school_id)
@@ -356,7 +353,7 @@ def tclasses_put_by_id(request:HttpRequest, payload:TclassesPatch, class_id:int)
     return 200, class_obj
 
 @api.patch('/tclasses/{class_id}', response={200:TclassesListed, 404:ErrorSchema})
-def tclasses_patch_by_id(request:HttpRequest, payload:TclassesPatch, class_id:int):
+def tclasses_patch_by_id(request:HttpRequest, class_id:int, payload:TclassesPatch = Form(...)):
     try:
         to_patch = get_object_or_404(tclasses, pk=class_id)
     except:
@@ -379,14 +376,20 @@ def tclasses_delete_by_id(request:HttpRequest, class_id:int):
 ##       EnrollForm     ##
 ##########################
 
-@api.patch('/tclasses',response={202:ErrorSchema, 406:ErrorSchema})
-def enrolled_student(request:HttpRequest, payload:EnrollForm):
+@api.patch('/tclasses',response={202:ErrorSchema, 404:ErrorSchema, 406:ErrorSchema})
+def enrolled_student(request:HttpRequest, payload:EnrollForm = Form(...)):
     for tclass in payload.class_id_list:
-        tclass_obj = get_object_or_404(tclasses, pk=tclass)
+        try:
+            tclass_obj = get_object_or_404(tclasses, pk=tclass)
+        except:
+            return 404, {'message':'Non Found'}
         for student in payload.student_id_list:
-            student_obj = get_object_or_404(students, pk=student)
+            try:
+                student_obj = get_object_or_404(students, pk=student)
+            except:
+                return 404, {'message':'Non Found'}
             if tclass_obj.school != student_obj.school:
-                return 406, {'message':'student can not enroll'}
+                return 406, {'message':'Bad Input'}
     for tclass in payload.class_id_list:
         tclass_obj = get_object_or_404(tclasses, pk=tclass)
         for student in payload.student_id_list:
