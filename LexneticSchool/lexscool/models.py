@@ -17,8 +17,8 @@ class headmasters(models.Model):
 
 class teachers(models.Model):
     name = models.CharField(max_length=100)
-    email = models.EmailField(max_length=254)
-    tel = models.CharField(max_length=100)
+    email = models.EmailField(max_length=254, null=True)
+    tel = models.CharField(max_length=100, null=True)
     school = models.ForeignKey('schools', on_delete=models.SET_NULL, null=True)
 
 
