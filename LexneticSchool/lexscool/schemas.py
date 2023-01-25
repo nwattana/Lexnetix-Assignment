@@ -106,7 +106,7 @@ class StudentListed(Schema):
     
 class TclassesListed(Schema):
     title: str
-    descript: str
+    description: str
     teacher: str
     student:list[StudentBase] = None
     school: str
@@ -146,7 +146,7 @@ class StudentPost(Schema):
     
 class TclassesPost(Schema):
     title:str
-    descript:str
+    description:str
     school_id : int
     teacher_id: int
     student_list: list
